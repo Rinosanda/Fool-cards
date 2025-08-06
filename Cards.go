@@ -8,14 +8,14 @@ import (
 
 // Карта
 type Card struct {
-    suit string
+    suit  string
     value string
 }
 
 // Игрок
 type Player struct {
-    name string
-    hand []Card
+    name       string
+    hand       []Card
     isAttacker bool
 }
 
@@ -39,7 +39,7 @@ func NewDeck() Deck {
 // Перемешивание колоды
 func (d *Deck) Shuffle() {
     rand.Seed(time.Now().UnixNano())
-    rand.Shuffle(len(*d), func(i, j int) { (*d)i, (*d)j = (*d)j, (*d)i })
+    rand.Shuffle(len(*d), func(i, j int) { (*d)[i], (*d)[j] = (*d)[j], (*d)[i] })
 }
 
 // Раздача карт
@@ -125,3 +125,22 @@ func gameLoop(players []Player) {
         attacker, defender = defender, attacker
     }
 }
+
+func main() {
+    // Создаем колоду и перемешиваем
+    deck := NewDeck()
+	deck.Shuffle()  // Добавляем перемешивание
+    
+    // Создаем игроков
+    players := []Player{
+        {name: "Игрок", hand: []Card{}, isAttacker: true},
+        {name: "Компьютер", hand: []Card{}, isAttacker: false},
+    }
+    
+    // Раздаем карты
+    DealCards(deck, players)
+    
+    // Запускаем игровой цикл
+    gameLoop(players)
+}
+
