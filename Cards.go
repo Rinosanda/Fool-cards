@@ -6,23 +6,23 @@ import (
     "time"
 )
 
-// Карта
+
 type Card struct {
     suit  string
     value string
 }
 
-// Игрок
+
 type Player struct {
     name       string
     hand       []Card
     isAttacker bool
 }
 
-// Колода
+
 type Deck []Card
 
-// Создание колоды
+
 func NewDeck() Deck {
     suits := []string{"Черви", "Бубны", "Трефы", "Пики"}
     values := []string{"6", "7", "8", "9", "10", "В", "Д", "К", "Т"}
@@ -36,13 +36,13 @@ func NewDeck() Deck {
     return deck
 }
 
-// Перемешивание колоды
+
 func (d *Deck) Shuffle() {
     rand.Seed(time.Now().UnixNano())
     rand.Shuffle(len(*d), func(i, j int) { (*d)[i], (*d)[j] = (*d)[j], (*d)[i] })
 }
 
-// Раздача карт
+
 func DealCards(deck Deck, players []Player) {
     for i := 0; i < 6; i++ {
         for j, player := range players {
@@ -52,7 +52,7 @@ func DealCards(deck Deck, players []Player) {
     }
 }
 
-// Функция для удаления карты из руки
+
 func removeCard(hand []Card, card Card) []Card {
     newHand := []Card{}
     for _, c := range hand {
@@ -63,22 +63,22 @@ func removeCard(hand []Card, card Card) []Card {
     return newHand
 }
 
-// Функция для проверки возможности хода
+
 func canPlayCard(attacker *Player, defender *Player, card Card) bool {
-    // Простая проверка - можно ходить любой картой
+    
     return true
 }
 
-// Функция для выполнения хода игрока
+
 func playerTurn(player *Player, opponent *Player) {
     fmt.Printf("Ход игрока %s\n", player.name)
-    // Здесь логика выбора карты игроком
-    chosenCard := player.hand[0] // Временная реализация
+    
+    chosenCard := player.hand[0] 
     fmt.Printf("Выбранная карта: %s %s\n", chosenCard.value, chosenCard.suit)
     
-    // Проверка возможности хода
+    
     if canPlayCard(player, opponent, chosenCard) {
-        // Выполнение хода
+        
         player.hand = removeCard(player.hand, chosenCard)
         opponent.hand = append(opponent.hand, chosenCard)
     } else {
@@ -86,25 +86,25 @@ func playerTurn(player *Player, opponent *Player) {
     }
 }
 
-// Функция для выполнения хода компьютера
+
 func computerTurn(computer *Player, human *Player) {
     fmt.Println("Ход компьютера")
-    // Простая реализация ИИ
-    chosenCard := computer.hand[0] // Компьютер ходит первой картой
+    
+    chosenCard := computer.hand[0] 
     fmt.Printf("Компьютер выбрал карту: %s %s\n", chosenCard.value, chosenCard.suit)
     
-    // Выполнение хода
+    
     computer.hand = removeCard(computer.hand, chosenCard)
     human.hand = append(human.hand, chosenCard)
 }
 
-// Основной игровой цикл
+
 func gameLoop(players []Player) {
-    attacker := &players[0] // Первый атакующий
+    attacker := &players[0] 
     defender := &players[1]
     
     for {
-        // Проверка на победу
+        
         if len(attacker.hand) == 0 {
             fmt.Printf("Победил %s!\n", defender.name)
             break
@@ -114,33 +114,34 @@ func gameLoop(players []Player) {
             break
         }
         
-        // Ход атакующего
+        
         if attacker.name == "Игрок" {
             playerTurn(attacker, defender)
         } else {
             computerTurn(attacker, defender)
         }
         
-        // Смена ролей
+        
         attacker, defender = defender, attacker
     }
 }
 
 func main() {
-    // Создаем колоду и перемешиваем
-    deck := NewDeck()
-	deck.Shuffle()  // Добавляем перемешивание
     
-    // Создаем игроков
+    deck := NewDeck()
+	deck.Shuffle()  
+    
+    
     players := []Player{
         {name: "Игрок", hand: []Card{}, isAttacker: true},
         {name: "Компьютер", hand: []Card{}, isAttacker: false},
     }
     
-    // Раздаем карты
+   
     DealCards(deck, players)
     
-    // Запускаем игровой цикл
+    
     gameLoop(players)
 }
+
 
